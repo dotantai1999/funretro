@@ -12,7 +12,7 @@ function ListBoard(props) {
 
     useEffect(() => {
         async function fetchBoardList() {
-            const result = await axios.get('http://localhost:3001/boards');
+            const result = await axios.get('https://dotantai-api-funretro.herokuapp.com/boards');
             console.log(result.data);
             setListBoard(result.data);
         }
