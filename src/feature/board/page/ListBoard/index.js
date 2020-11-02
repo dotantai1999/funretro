@@ -4,8 +4,6 @@ import { Button, Modal, Input, Card, Space } from 'antd';
 import { EditFilled, DeleteFilled } from '@ant-design/icons';
 
 
-
-
 const ListBoard = () => {
     const [listBoard, setListBoard] = useState([]);
     const [visible, setVisible] = useState(false);
@@ -77,7 +75,7 @@ const ListBoard = () => {
         <div>
             <Space size='large'>
                 {listBoard.map((board, index) => {
-                    (
+                return (
                         <Card
                             key={index}
                             title={board.name}

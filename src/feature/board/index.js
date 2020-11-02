@@ -4,10 +4,8 @@ import ListBoard from './page/ListBoard';
 
 const Board = () => {
     return (
-
-
         <Switch>
-            <Route path='/' component={ListBoard}></Route>
+            <Route path='/board' component={ListBoard}></Route>
             {/*<Route path='/:boardId' exact component={BoardDetail}></Route>*/}
         </Switch>
     )
