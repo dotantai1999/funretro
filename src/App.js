@@ -1,17 +1,22 @@
 import './App.css';
-import './feature/board/page/ListBoard/ListBoard'
+import React from 'react';
+import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import board from './feature/board';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 
 
 function App() {
   return (
-    <div className="App">
-        <div className="LoginForm">         
-        </div>
+    <BrowserRouter>
+      <Switch>
+        <Route path='/board' component={board} />
+        {/*<Route path='/user' component={User} />
+        <Route path='/login' component={Login} />
+        <Route path='/signup' component={SignUp} />*/}
 
-    </div>
+      </Switch>
+    </BrowserRouter>
+
   );
 }
 
