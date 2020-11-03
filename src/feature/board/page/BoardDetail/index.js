@@ -3,7 +3,6 @@ import Column from '../../components/Column'
 
 
 const BoardDetail = (args) => {
-    console.log(args);
     return (
         <div>
             <label>Board Name</label>

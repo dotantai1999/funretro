@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Modal, Input, Card, Space } from 'antd';
 import { EditOutlined, DeleteOutlined, BarsOutlined } from '@ant-design/icons';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 
 const ListBoard = () => {
@@ -62,12 +62,13 @@ const ListBoard = () => {
     const handleOk = () => {
         if (isEdit) {
             console.log("Call Edit API");
+
         } else {
             console.log("Call Add API");
         }
-
-        setVisible(false);
         setIsEdit(false);
+        setVisible(false);
+
     };
 
     const handleCancel = () => {
@@ -82,7 +83,7 @@ const ListBoard = () => {
 
     const handleEdit = (boardId) => {
         setVisible(true);
-        const editName = listBoard.filter((board, index) => { return board.id === boardId }).map((board, index) => board.name);
+        const editName = listBoard.filter((board) => { return board.id === boardId }).map((board) => board.name);
         setName(editName);
         setIsEdit(true);
     }
