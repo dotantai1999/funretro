@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Modal, Input, Card, Space } from 'antd';
-import { EditFilled, DeleteFilled } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, BarsOutlined } from '@ant-design/icons';
+import { Redirect, useHistory } from 'react-router-dom';
 
 
 const ListBoard = () => {
     const [listBoard, setListBoard] = useState([]);
     const [visible, setVisible] = useState(false);
     const [name, setName] = useState("");
+    const [isEdit, setIsEdit] = useState(false);
+    const history = useHistory();
 
     const listBoardItem = [
         {
@@ -48,6 +51,7 @@ const ListBoard = () => {
     // }, [])
 
     const handleAddBoard = () => {
+        setName("");
         showModal();
     }
 
@@ -56,9 +60,14 @@ const ListBoard = () => {
     };
 
     const handleOk = () => {
-        //Call API add board
+        if (isEdit) {
+            console.log("Call Edit API");
+        } else {
+            console.log("Call Add API");
+        }
 
         setVisible(false);
+        setIsEdit(false);
     };
 
     const handleCancel = () => {
@@ -71,19 +80,52 @@ const ListBoard = () => {
         }
     }
 
+    const handleEdit = (boardId) => {
+        setVisible(true);
+        const editName = listBoard.filter((board, index) => { return board.id === boardId }).map((board, index) => board.name);
+        setName(editName);
+        setIsEdit(true);
+    }
+
+    const handleDelete = (boardId) => {
+        console.log("Delete Board");
+
+        // Call API Delete
+
+        //Dummy code
+        const result = listBoard.splice(1, boardId - 1);
+
+        setListBoard(result);
+    }
+
+    const handleViewDetail = (boardId) => {
+        console.log(boardId);
+        history.push(`/board/${boardId}`);
+    }
+
     return (
         <div>
             <Space size='large'>
                 {listBoard.map((board, index) => {
-                return (
+                    return (
                         <Card
                             key={index}
                             title={board.name}
                             bordered={false}
                             style={{ width: 300 }}
                             actions={[
-                                <EditFilled key='edit' />,
-                                <DeleteFilled key='delete' />]}
+                                <EditOutlined
+                                    key='edit'
+                                    onClick={() => handleEdit(board.id)} />,
+                                <DeleteOutlined
+                                    key='delete'
+                                    onClick={() => handleDelete(board.id)} />,
+
+                                <BarsOutlined
+                                    key='view'
+                                    onClick={() => handleViewDetail(board.id)}
+                                />
+                            ]}
                         >
                             <p>{board.created_date}</p>
                         </Card>
