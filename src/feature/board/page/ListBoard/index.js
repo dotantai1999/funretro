@@ -4,148 +4,141 @@ import { Button, Modal, Input, Card, Space } from 'antd';
 import { EditOutlined, DeleteOutlined, BarsOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 
-
 const ListBoard = () => {
     const [listBoard, setListBoard] = useState([]);
-    const [visible, setVisible] = useState(false);
-    const [name, setName] = useState("");
-    const [isEdit, setIsEdit] = useState(false);
+    const [visibleAdd, setVisibleAdd] = useState(false);
+    const [visibleEdit, setVisibleEdit] = useState(false);
+    const [name, setName] = useState('');
+    const [boardId, setBoardId] = useState(null);
     const history = useHistory();
 
-    const listBoardItem = [
-        {
-            id: 1,
-            name: 'name1',
-            created_date: '12/10/2020'
-        },
-
-        {
-            id: 2,
-            name: 'name2',
-            created_date: '12/10/2020'
-        },
-
-        {
-            id: 3,
-            name: 'name3',
-            created_date: '12/10/2020'
+    useEffect(() => {
+        async function fetchBoardList() {
+            const result = await axios.get('http://localhost:7000/boards');
+            setListBoard(result.data.data.boardList);
         }
 
-    ];
-
-    useEffect(() => {
-        setListBoard(listBoardItem);
+        fetchBoardList();
     }, []);
 
-
-
-
-    // useEffect(() => {
-    //     async function fetchBoardList() {
-    //         const result = await axios.get('https://dotantai-api-funretro.herokuapp.com/boards');
-    //         console.log(result.data);
-    //         setListBoard(result.data);
-    //     }
-
-    //     fetchBoardList();
-    // }, [])
-
+    // ADD
     const handleAddBoard = () => {
-        setName("");
-        showModal();
-    }
-
-    const showModal = () => {
-        setVisible(true);
+        setVisibleAdd(true);
     };
 
-    const handleOk = () => {
-        if (isEdit) {
-            console.log("Call Edit API");
+    const handleAddOk = async () => {
+        const result = await axios.post('http://localhost:7000/boards/', {
+            userId: 1,
+            boardName: name,
+        });
 
-        } else {
-            console.log("Call Add API");
-        }
-        setIsEdit(false);
-        setVisible(false);
-
+        history.push(`/board/${result.data.data.boardId}`);
+        setVisibleAdd(false);
     };
 
-    const handleCancel = () => {
-        setVisible(false);
+    const handleAddCancel = () => {
+        setName('');
+        setVisibleAdd(false);
     };
 
+    // EDIT
+    const handleEdit = (boardId) => {
+        setVisibleEdit(true);
+        const editName = listBoard
+            .filter((board) => {
+                return board.boardId === boardId;
+            })
+            .map((board) => board.boardName);
+        setName(editName);
+        setBoardId(boardId);
+    };
+
+    const handleEditOk = async () => {
+        const result = await axios.patch(`http://localhost:7000/boards/${boardId}`, {
+            userId: 1,
+            boardName: name,
+        });
+
+        setVisibleEdit(false);
+    };
+
+    const handleEditCancel = () => {
+        setName('');
+        setVisibleEdit(false);
+    };
+
+    //
     const handleChange = (e) => {
         if (e.target.name === 'name') {
             setName(e.target.value);
         }
-    }
+    };
 
-    const handleEdit = (boardId) => {
-        setVisible(true);
-        const editName = listBoard.filter((board) => { return board.id === boardId }).map((board) => board.name);
-        setName(editName);
-        setIsEdit(true);
-    }
+    const handleDelete = async (boardId) => {
+        const result = await axios.delete(`http://localhost:7000/boards/${boardId}`, {
+            userId: 1,
+        });
 
-    const handleDelete = (boardId) => {
-        console.log("Delete Board");
+        console.log(result);
 
-        // Call API Delete
-
-        //Dummy code
-        const result = listBoard.splice(1, boardId - 1);
-
-        setListBoard(result);
-    }
+        setListBoard(listBoard.filter((board) => board.boardId !== +result.data.data.boardId));
+    };
 
     const handleViewDetail = (boardId) => {
-        console.log(boardId);
         history.push(`/board/${boardId}`);
-    }
+    };
 
     return (
         <div>
             <Space size='large'>
-                {listBoard.map((board, index) => {
-                    return (
-                        <Card
-                            key={index}
-                            title={board.name}
-                            bordered={false}
-                            style={{ width: 300 }}
-                            actions={[
-                                <EditOutlined
-                                    key='edit'
-                                    onClick={() => handleEdit(board.id)} />,
-                                <DeleteOutlined
-                                    key='delete'
-                                    onClick={() => handleDelete(board.id)} />,
+                {listBoard &&
+                    listBoard.map((board, index) => {
+                        return (
+                            <Card
+                                key={index}
+                                title={board.boardName}
+                                bordered={false}
+                                style={{ width: 300 }}
+                                actions={[
+                                    <EditOutlined
+                                        key='edit'
+                                        onClick={() => handleEdit(board.boardId)}
+                                    />,
+                                    <DeleteOutlined
+                                        key='delete'
+                                        onClick={() => handleDelete(board.boardId)}
+                                    />,
 
-                                <BarsOutlined
-                                    key='view'
-                                    onClick={() => handleViewDetail(board.id)}
-                                />
-                            ]}
-                        >
-                            <p>{board.created_date}</p>
-                        </Card>
-                    )
-                })}
+                                    <BarsOutlined
+                                        key='view'
+                                        onClick={() => handleViewDetail(board.boardId)}
+                                    />,
+                                ]}
+                            >
+                                <p>{board.createdAt}</p>
+                            </Card>
+                        );
+                    })}
             </Space>
             <Button onClick={handleAddBoard}>Thêm</Button>
             <Modal
-                title="Add Board"
-                visible={visible}
-                onOk={handleOk}
-                onCancel={handleCancel}
+                title={'Add Board'}
+                visible={visibleAdd}
+                onOk={handleAddOk}
+                onCancel={handleAddCancel}
             >
-                <Input placeholder="Board Name" name="name" value={name} onChange={handleChange} />
-
+                <Input placeholder='Board Name' name='name' value={name} onChange={handleChange} />
+            </Modal>
+            <Modal
+                title={'Edit Board'}
+                visible={visibleEdit}
+                onOk={handleEditOk}
+                onCancel={handleEditCancel}
+            >
+                <Input placeholder='Board Name' name='name' value={name} onChange={handleChange} />
             </Modal>
         </div>
-
     );
-}
+};
 
 export default ListBoard;
