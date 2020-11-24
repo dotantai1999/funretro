@@ -11,7 +11,7 @@ const SignUp = () => {
     const onFinish = async (values) => {
         delete values.confirm;
         console.log(values);
-        const res = await axios.post('http://localhost:4000/auth/signup', values);
+        const res = await axios.post('https://dotantai-api-funretro.herokuapp.com/auth/signup', values);
         if (res.data.status === 'success') {
             history.push('/login');
         }

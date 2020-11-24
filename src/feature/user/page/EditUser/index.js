@@ -19,7 +19,7 @@ const EditUser = () => {
     useEffect(() => {
         const fetchUser = async () => {
             const userId = JSON.parse(localStorage.getItem('userInfo')).userId;
-            const res = await axios.get(`http://localhost:4000/users/${userId}`);
+            const res = await axios.get(`https://dotantai-api-funretro.herokuapp.com/users/${userId}`);
             if (res.data.status === 'success') {
                 setFields([
                     { name: 'username', value: res.data.data.userInfo.username },
@@ -35,7 +35,7 @@ const EditUser = () => {
 
     const onFinish = async (values) => {
         const userId = JSON.parse(localStorage.getItem('userInfo')).userId;
-        const res = await axios.patch(`http://localhost:4000/users/${userId}`, values);
+        const res = await axios.patch(`https://dotantai-api-funretro.herokuapp.com/users/${userId}`, values);
         if (res.data.status === 'success') {
             setFields([
                 { name: 'username', value: res.data.data.userInfo.username },

@@ -15,7 +15,7 @@ const ListBoard = () => {
 
     useEffect(() => {
         async function fetchBoardList() {
-            const result = await axios.get('http://localhost:4000/boards/',{
+            const result = await axios.get('https://dotantai-api-funretro.herokuapp.com/boards/',{
                 headers: {Authorization: 'Bearer '+localStorage.getItem('token')}
             });
             setListBoard(result.data.data.boardList);
@@ -30,7 +30,7 @@ const ListBoard = () => {
     };
 
     const handleAddOk = async () => {
-        const result = await axios.post('http://localhost:4000/boards/', {
+        const result = await axios.post('https://dotantai-api-funretro.herokuapp.com/boards/', {
             boardName: name,
         },{
             headers: {Authorization: 'Bearer '+localStorage.getItem('token')}
@@ -58,7 +58,7 @@ const ListBoard = () => {
     };
 
     const handleEditOk = async () => {
-        const result = await axios.patch(`http://localhost:4000/boards/${boardId}`, {
+        const result = await axios.patch(`https://dotantai-api-funretro.herokuapp.com/boards/${boardId}`, {
             userId: 1,
             boardName: name,
         },{
@@ -88,7 +88,7 @@ const ListBoard = () => {
     };
 
     const handleDelete = async (boardId) => {
-        const result = await axios.delete(`http://localhost:4000/boards/${boardId}`, {
+        const result = await axios.delete(`https://dotantai-api-funretro.herokuapp.com/boards/${boardId}`, {
             headers: {Authorization: 'Bearer '+localStorage.getItem('token')}
         });
 

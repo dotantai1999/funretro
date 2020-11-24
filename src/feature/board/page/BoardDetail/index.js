@@ -29,7 +29,7 @@ const BoardDetail = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const boardRes = await axios.get(`http://localhost:4000/boards/${boardId}`, {
+            const boardRes = await axios.get(`https://dotantai-api-funretro.herokuapp.com/boards/${boardId}`, {
                 headers: {Authorization: 'Bearer '+localStorage.getItem('token')}
             });
             if (boardRes.data.status === 'success') {
@@ -39,7 +39,7 @@ const BoardDetail = () => {
 
         fetchData();
 
-        socket = socketIOClient('http://localhost:4000/', {
+        socket = socketIOClient('https://dotantai-api-funretro.herokuapp.com/', {
             transports: ['websocket', 'polling', 'flashsocket'],
         });
         socket.emit('joinBoard', { boardId });
@@ -52,7 +52,7 @@ const BoardDetail = () => {
             socket.emit('initialData', { boardId });
         });
         
-    }, []);
+    }, [boardId]);
 
     const handleOnDragEnd = async (result) => {
         const { source, destination } = result;

@@ -1,9 +1,7 @@
 import React from 'react';
 import { Layout, Typography } from 'antd';
-import { FaUserCog } from 'react-icons/fa';
 import './style.scss';
 import { Menu, Dropdown } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';

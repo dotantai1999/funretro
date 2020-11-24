@@ -14,7 +14,7 @@ const SignIn = () => {
   const {onLogin} = useAuthContext();
   const history = useHistory();
   const onFinish = async (values) => {
-    const res = await axios.post("http://localhost:4000/auth/login", values);
+    const res = await axios.post("https://dotantai-api-funretro.herokuapp.com/auth/login", values);
 
     if (res.data.status === "success") {
       onLogin(res.data.data.userInfo, res.data.data.token);
@@ -23,7 +23,7 @@ const SignIn = () => {
   };
 
   const handleGoogleSuccess = async (res) => {
-        const response = await axios.get('http://localhost:4000/auth/google',{
+        const response = await axios.get('https://dotantai-api-funretro.herokuapp.com/auth/google',{
             headers: {access_token: res.accessToken},
         });
 
@@ -39,7 +39,7 @@ const SignIn = () => {
   }
 
   const handleFacebookSuccess = async (res) => {
-      const response = await axios.get('http://localhost:4000/auth/facebook',{
+      const response = await axios.get('https://dotantai-api-funretro.herokuapp.com/auth/facebook',{
       headers: {Authorization: 'Bearer ' + res.accessToken},
   });
 

@@ -5,7 +5,6 @@ import board from './feature/board';
 import SignIn from './feature/auth/page/SignIn';
 import EditUser from './feature/user/page/EditUser';
 import SignUp from './feature/auth/page/SignUp';
-import Layout from './components/layout';
 import PrivatedRoute from './components/privatedroute';
 import AuthContextProvider from './context/AuthContext';
 
