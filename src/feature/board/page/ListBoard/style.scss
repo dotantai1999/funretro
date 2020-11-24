@@ -1,0 +1,20 @@
+.container-listboard {
+    border: dashed 1px red;
+    padding: 10px;
+    height: 100px !important;
+    width: 100px;
+    margin-bottom: 20px;
+    
+    .button-add-board {
+        margin: 10px 10px;
+        border-radius: 180%;
+        height: 60px;
+        width: 60px;
+        text-align: center !important;
+    }
+}
+
+.board-item {
+    font-weight: bold;
+    text-align: center;
+}

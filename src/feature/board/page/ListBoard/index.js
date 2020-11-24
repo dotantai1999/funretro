@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Button, Modal, Input, Card, Space } from 'antd';
 import { EditOutlined, DeleteOutlined, BarsOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
+import './style.scss';
 
 const ListBoard = () => {
     const [listBoard, setListBoard] = useState([]);
@@ -14,7 +15,9 @@ const ListBoard = () => {
 
     useEffect(() => {
         async function fetchBoardList() {
-            const result = await axios.get('http://localhost:7000/boards');
+            const result = await axios.get('http://localhost:4000/boards/',{
+                headers: {Authorization: 'Bearer '+localStorage.getItem('token')}
+            });
             setListBoard(result.data.data.boardList);
         }
 
@@ -27,12 +30,13 @@ const ListBoard = () => {
     };
 
     const handleAddOk = async () => {
-        const result = await axios.post('http://localhost:7000/boards/', {
-            userId: 1,
+        const result = await axios.post('http://localhost:4000/boards/', {
             boardName: name,
+        },{
+            headers: {Authorization: 'Bearer '+localStorage.getItem('token')}
         });
 
-        history.push(`/board/${result.data.data.boardId}`);
+        history.push(`/board/${result.data.data.boardInfo.boardId}`);
         setVisibleAdd(false);
     };
 
@@ -54,12 +58,21 @@ const ListBoard = () => {
     };
 
     const handleEditOk = async () => {
-        const result = await axios.patch(`http://localhost:7000/boards/${boardId}`, {
+        const result = await axios.patch(`http://localhost:4000/boards/${boardId}`, {
             userId: 1,
             boardName: name,
+        },{
+            headers: {Authorization: 'Bearer '+localStorage.getItem('token')}
         });
-
+    const updatedListBoard = listBoard.map((board) => {
+            if(board.boardId === boardId) {
+                return result.data.data.boardInfo;
+            }
+            return board;
+            } );    
         setVisibleEdit(false);
+        setListBoard(updatedListBoard);
+        setName('');
     };
 
     const handleEditCancel = () => {
@@ -75,11 +88,9 @@ const ListBoard = () => {
     };
 
     const handleDelete = async (boardId) => {
-        const result = await axios.delete(`http://localhost:7000/boards/${boardId}`, {
-            userId: 1,
+        const result = await axios.delete(`http://localhost:4000/boards/${boardId}`, {
+            headers: {Authorization: 'Bearer '+localStorage.getItem('token')}
         });
-
-        console.log(result);
 
         setListBoard(listBoard.filter((board) => board.boardId !== +result.data.data.boardId));
     };
@@ -89,16 +100,22 @@ const ListBoard = () => {
     };
 
     return (
-        <div>
+        <div>           
+            
+            <div className='container-listboard'>
+            <Button className='button-add-board' type='primary' onClick={handleAddBoard}>Thêm</Button>           
+            </div>
+
             <Space size='large'>
                 {listBoard &&
                     listBoard.map((board, index) => {
                         return (
                             <Card
+                                className='board-item'
+                                style={{backgroundColor: '#EEE', width: 300}}
+                                hoverable
                                 key={index}
-                                title={board.boardName}
                                 bordered={false}
-                                style={{ width: 300 }}
                                 actions={[
                                     <EditOutlined
                                         key='edit'
@@ -115,12 +132,12 @@ const ListBoard = () => {
                                     />,
                                 ]}
                             >
-                                <p>{board.createdAt}</p>
+                                {board.boardName}
                             </Card>
                         );
                     })}
             </Space>
-            <Button onClick={handleAddBoard}>Thêm</Button>
+
             <Modal
                 title={'Add Board'}
                 visible={visibleAdd}
@@ -137,6 +154,7 @@ const ListBoard = () => {
             >
                 <Input placeholder='Board Name' name='name' value={name} onChange={handleChange} />
             </Modal>
+            
         </div>
     );
 };

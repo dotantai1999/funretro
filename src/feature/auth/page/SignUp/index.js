@@ -3,16 +3,26 @@ import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import { Typography } from "antd";
+const { Title } = Typography;
 
 const SignUp = () => {
     const history = useHistory();
     const onFinish = async (values) => {
-        const result = await axios.post('http://localhost:7000/users/signup', values);
-        history.push('/login');
+        delete values.confirm;
+        console.log(values);
+        const res = await axios.post('http://localhost:4000/auth/signup', values);
+        if (res.data.status === 'success') {
+            history.push('/login');
+        }
     };
 
     return (
+<div className='container'>
+        <div className='div-form'>
+        <Title type="secondary">SIGNUP FORM</Title>
         <Form
+            style={{margin: 'auto'}}
             name='normal_login'
             className='login-form'
             initialValues={{
@@ -71,9 +81,11 @@ const SignUp = () => {
                     Register
                 </Button>
 
-                <a href=''>Or login!</a>
             </Form.Item>
         </Form>
+
+</div>
+</div>
     );
 };
 
